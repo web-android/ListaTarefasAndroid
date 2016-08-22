@@ -1,23 +1,16 @@
 package br.edu.ifpr.webandroid.todolist;
 
 import android.content.DialogInterface;
-import android.graphics.Paint;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 import br.edu.ifpr.webandroid.todolist.model.Tarefa;
 import io.realm.Realm;
@@ -74,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "Tarefa a ser adicionada: " + descricao);
                         realm.beginTransaction();
                         Tarefa tarefa = new Tarefa();
-                        Long proximoId =   realm.where(Tarefa.class).max("id").longValue() + 1;
+                        Number maxId = realm.where(Tarefa.class).max("id");
+                        if(maxId == null){
+                            maxId = 0;
+                        }
+                        Long proximoId =   maxId.longValue() + 1;
                         tarefa.setId(proximoId);
                         tarefa.setDescricao(descricao);
                         tarefa.setFeita(false);
